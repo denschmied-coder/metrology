@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Find device</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+            
+            .form-container {
+                background: white;
+                padding: 40px;
+                border-radius: 15px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 600px;
+                width: 100%;
+            }
+            
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 24px;
+                font-weight: 600;
+            }
+            
+            .search-form {
+                margin-bottom: 25px;
+                padding: 20px;
+                background: #f7fafc;
+                border-radius: 10px;
+                border-left: 4px solid #667eea;
+                transition: all 0.3s ease;
+            }
+            
+            .search-form:hover {
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                transform: translateX(5px);
+            }
+            
+            .search-form:last-of-type {
+                margin-bottom: 30px;
+            }
+            
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            label {
+                font-weight: 600;
+                color: #2d3748;
+                font-size: 14px;
+            }
+            
+            .input-group {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            input {
+                flex: 1;
+                padding: 12px 15px;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: border-color 0.3s ease;
+                background: white;
+            }
+            
+            input:focus {
+                border-color: #667eea;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+            
+            input::placeholder {
+                color: #a0aec0;
+            }
+            
+            .btn-search {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                white-space: nowrap;
+                color: white;
+            }
+            
+            .btn-search:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+            
+            .btn-search:active {
+                transform: translateY(0);
+            }
+            
+            .btn-name {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+            }
+            
+            .btn-name:hover {
+                background: linear-gradient(135deg, #5a67d8, #6b46a1);
+            }
+            
+            .btn-type {
+                background: linear-gradient(135deg, #48bb78, #38a169);
+            }
+            
+            .btn-type:hover {
+                background: linear-gradient(135deg, #38a169, #2f855a);
+            }
+            
+            .btn-place {
+                background: linear-gradient(135deg, #ed8936, #dd6b20);
+            }
+            
+            .btn-place:hover {
+                background: linear-gradient(135deg, #dd6b20, #c05621);
+            }
+            
+            .btn-back {
+                display: inline-block;
+                padding: 12px 24px;
+                background: #718096;
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .btn-back:hover {
+                background: #4a5568;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+            
+            .search-icon {
+                margin-right: 5px;
+            }
+            
+            .form-divider {
+                height: 1px;
+                background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+                margin: 5px 0 20px 0;
+            }
+            
+            /* Адаптивность для мобильных устройств */
+            @media (max-width: 600px) {
+                .form-container {
+                    padding: 20px;
+                }
+                
+                .input-group {
+                    flex-direction: column;
+                }
+                
+                .btn-search {
+                    width: 100%;
+                }
+                
+                h1 {
+                    font-size: 20px;
+                }
+            }
+            
+            /* Анимация появления */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .search-form {
+                animation: fadeInUp 0.5s ease forwards;
+            }
+            
+            .search-form:nth-child(2) {
+                animation-delay: 0.1s;
+            }
+            
+            .search-form:nth-child(3) {
+                animation-delay: 0.2s;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h1>🔍 Поиск средства измерения</h1>
+            
+            <!-- Форма для поиска по названию -->
+            <div class="search-form">
+                <form th:action="@{/user/findedN}" method="get">
+                    <div class="form-group">
+                        <label for="nameOfDevice">
+                            📝 Поиск по названию
+                        </label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   id="nameOfDevice" 
+                                   name="nameOfDevice" 
+                                   placeholder="Введите название СИ..."
+                                   th:value="${searchName}"/>
+                            <button type="submit" class="btn-search btn-name">
+                                <span class="search-icon">🔍</span> Найти
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Форма для поиска по типу -->
+            <div class="search-form">
+                <form th:action="@{/user/findedT}" method="get">
+                    <div class="form-group">
+                        <label for="typeOfDevice">
+                            🏷️ Поиск по типу
+                        </label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   id="typeOfDevice" 
+                                   name="typeOfDevice" 
+                                   placeholder="Введите тип СИ..."
+                                   th:value="${searchType}"/>
+                            <button type="submit" class="btn-search btn-type">
+                                <span class="search-icon">🔍</span> Найти
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Форма для поиска по месту установки -->
+            <div class="search-form">
+                <form th:action="@{/user/findedP}" method="get">
+                    <div class="form-group">
+                        <label for="place">
+                            📍 Поиск по месту установки
+                        </label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   id="place" 
+                                   name="place" 
+                                   placeholder="Введите место установки..."
+                                   th:value="${searchPlace}"/>
+                            <button type="submit" class="btn-search btn-place">
+                                <span class="search-icon">🔍</span> Найти
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Форма для поиска по статусу -->
+<div class="search-form">
+    <form th:action="@{/user/findedS}" method="get">
+        <div class="form-group">
+            <label for="status">
+                📍 Поиск по статусу прибора
+            </label>
+            <select id="status" name="status" th:value="${searchStatus}">
+                <option value="">Выберите статус</option>
+                <option value="в эксплуатации">в эксплуатации</option>
+                <option value="в поверке">в поверке</option>
+                <option value="в ремонте">в ремонте</option>
+            </select>
+            <button type="submit" class="btn-search btn-place">
+                <span class="search-icon">🔍</span> Найти
+            </button>
+        </div>
+    </form>
+</div>
+            
+            <!-- Кнопка назад -->
+            <a href="/user/start" class="btn-back">
+                ← Назад к стартовой странице
+            </a>
+        </div>
+    </body>
+</html>

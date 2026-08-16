@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 80px;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .btn-view-all {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .btn-view-all:hover {
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        .btn-view-single {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        
+        .btn-view-single:hover {
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.5);
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        }
+        
+        .btn-add:hover {
+            box-shadow: 0 8px 25px rgba(246, 173, 85, 0.5);
+        }
+
+        /* Стиль для новой кнопки "Задание по поверке" */
+        .btn-verification {
+            background: linear-gradient(135deg, #fc5c7d 0%, #6a82fb 100%);
+        }
+
+        .btn-verification:hover {
+            box-shadow: 0 8px 25px rgba(252, 92, 125, 0.5);
+        }
+        
+        .btn .icon {
+            font-size: 20px;
+        }
+        
+        .btn .arrow {
+            font-size: 14px;
+            opacity: 0.7;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover .arrow {
+            transform: translateX(4px);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .footer-info {
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        
+        .footer-info strong {
+            color: #4a5568;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #f7fafc;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Метрологическое обеспечение</h1>
+            <div class="divider"></div>
+            <p class="subtitle">Сервис по учету средств измерений</p>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Средства измерений</div>
+            <div class="grid">
+                <a href="/user/findAll/Type" class="btn btn-view-all">
+                    <span class="icon">🔍</span>
+                    Все средства измерений с сортировкой по типу
+                    <span class="arrow">→</span>
+                </a>
+                <a href="/user/findAll/Date" class="btn btn-view-all">
+                    <span class="icon">🔍</span>
+                    Все средства измерений с сортировкой по дате поверки
+                    <span class="arrow">→</span>
+                </a>
+                <a href="/user/find" class="btn btn-view-single">
+                    <span class="icon">🔍</span>
+                    Найти средство измерений
+                    <span class="arrow">→</span>
+                </a>
+                <a href="/user/add" class="btn btn-add">
+                    <span class="icon">➕</span>
+                    Добавить средство измерений
+                    <span class="arrow">→</span>
+                </a>
+                
+                <a href="/user/devices/dateEnter" class="btn btn-verification">
+                    <span class="icon">📋</span>
+                    Задание по поверке на определенную дату
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+                       
+        <div class="footer">
+            <div class="footer-info">
+                <strong>Система управления метрологическим обеспечением</strong>
+                <br>
+                <span style="font-size: 12px;">Версия 1.0</span>
+            </div>
+            <div>
+                <span class="badge">✨ Добро пожаловать</span>
+                <span class="badge" style="margin-left: 5px;">📅 2026</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

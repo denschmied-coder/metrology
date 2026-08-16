@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список приборов, которые удалось найти</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #f56565;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(252, 129, 129, 0.4);
+        }
+        
+        .btn-warning {
+            background: #f6ad55;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #ed8936;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(246, 173, 85, 0.4);
+        }
+        
+        .stats {
+            background: #f7fafc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-count {
+            color: #4a5568;
+            font-size: 16px;
+        }
+        
+        .stats-count strong {
+            color: #667eea;
+            font-size: 20px;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+           
+        }
+        
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #4a5568;
+            font-size: 13px;
+        }
+        
+        tbody tr {
+            transition: background-color 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #f7fafc;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a0aec0;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .empty-state h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-info {
+            background: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            color: #2c5282;
+        }
+        .page-info {
+            padding: 8px 16px;
+            color: #4a5568;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .header-actions .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> Список приборов, которые удалось найти</h1>
+            <div class="header-actions">
+                <a href="/user/add" class="btn btn-success">➕ Добавить прибор</a>
+                <a href="/user/start" class="btn btn-primary">🏠 На главную</a>
+            </div>
+        </div>
+          <!-- Информационное сообщение -->
+        <div 
+            class="alert alert-info" th:if="${devices != null and !devices.isEmpty()}">
+           💡 Показано <strong th:text="${devices.numberOfElements}"></strong> 
+    из <strong th:text="${devices.totalElements}"></strong> приборов
+    
+        </div>
+        <!-- Пагинация -->
+<div th:if="${devices != null and devices.totalPages > 1}" class="pagination-container">
+    <div class="pagination">
+        <a th:if="${devices.hasPrevious()}" 
+           th:href="@{/user/findedS(page=0, size=${devices.size}, status=${searchStatus})}" 
+           class="page-link" title="Первая">⟪</a>
+           
+        <a th:if="${devices.hasPrevious()}" 
+           th:href="@{/user/findedS(page=${devices.number - 1}, size=${devices.size}, status=${searchStatus})}" 
+           class="page-link" title="Предыдущая">⟨</a>
+           
+        <span class="page-info">
+            Страница <strong th:text="${devices.number + 1}"></strong> 
+            из <strong th:text="${devices.totalPages}"></strong>
+        </span>
+           
+        <a th:if="${devices.hasNext()}" 
+           th:href="@{/user/findedS(page=${devices.number + 1}, size=${devices.size}, status=${searchStatus})}" 
+           class="page-link" title="Следующая">⟩</a>
+           
+        <a th:if="${devices.hasNext()}" 
+           th:href="@{/user/findedS(page=${devices.totalPages - 1}, size=${devices.size}, status=${searchStatus})}" 
+           class="page-link" title="Последняя">⟫</a>
+    </div>
+</div>
+       
+        
+        
+        <!-- Таблица с приборами -->
+<div class="table-responsive" th:if="${devices!= null and !devices.isEmpty()}">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название прибора</th>
+                <th>Серийный номер</th>
+                <th>Тип прибора</th>
+                <th>Регистрационный номер</th>
+                <th>Диапазон измерения</th>
+                <th>Класс точности</th>
+                <th>Дата поверки/калибровки</th>
+                <th>Периодичность поверки/калибровки (мес.)</th>
+                <th>Дата следующей поверки/калибровки</th>
+                 <th>Место установки</th> 
+                 <th>Статус прибора</th>  
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+             <tr th:each="device : ${devices}">
+                <td th:text="${device.id}"></td>
+                <td th:text="${device.nameOfDevice}"></td>
+                <td th:text="${device.serialNum}"></td>
+                <td th:text="${device.typeOfDevice}"></td>
+                <td th:text="${device.registrNum}"></td>
+                <td th:text="${device.measurRange}"></td>
+                <td th:text="${device.accuracy}"></td>
+                <td th:text="${#temporals.format(device.calibrDate, 'dd MM yyyy')}"></td>
+                <td th:text="${device.calibrInterval}"></td>
+                <td th:text="${#temporals.format(device.dateOfnextCalibr, 'dd MM yyyy')}"></td>
+                <td th:text="${device.place}"></td> 
+                <td th:text="${device.status}"></td> 
+                <td>
+                    <div class="action-buttons">
+                        <!-- Кнопка редактирования -->
+                        <a th:href="@{/user/edit/{id}(id=${device.id})}" 
+                           class="btn btn-warning btn-sm">
+                           ✏️ Редактировать
+                        </a>
+                        
+                       <!-- Кнопка удаления -->
+<form th:action="@{/user/delete/{id}(id=${device.id})}" 
+      method="post" 
+      style="display: inline;"
+      th:data-device-name="${device.nameOfDevice}"
+      onsubmit="return confirm('Удалить прибор «' + this.dataset.deviceName + '»?')">
+    <button type="submit" class="btn btn-danger btn-sm">
+        🗑️ Удалить
+    </button>
+</form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+        
+        <!-- Пустое состояние -->
+        <div class="empty-state" th:if="${devices == null or devices.isEmpty()}">
+           
+            <h3>Нет приборов</h3>
+            <p style="color: #a0aec0; margin-top: 10px;">
+                
+            </p>
+           
+        </div>
+    </div>
+</body>
+</html>
+
+
+

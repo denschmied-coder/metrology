@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Add new device</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 600px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            
+            .form-container {
+                background: white;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 24px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #333;
+                font-size: 14px;
+            }
+            
+            input, select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: border-color 0.3s, box-shadow 0.3s;
+            }
+            
+            input:focus, select:focus {
+                border-color: #4CAF50;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            }
+            
+            .form-group.has-error input,
+            .form-group.has-error select {
+                border-color: #dc3545;
+                background-color: #fff8f8;
+            }
+            
+            .form-group.has-error input:focus,
+            .form-group.has-error select:focus {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+            }
+            
+            .error-message {
+                color: #dc3545;
+                font-size: 12px;
+                margin-top: 5px;
+                display: block;
+            }
+            
+            .is-invalid {
+                border-color: #dc3545 !important;
+                background-color: #fff8f8;
+            }
+            
+            .btn-submit {
+                background: #4CAF50;
+                color: white;
+                padding: 12px 30px;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                width: 100%;
+                transition: background 0.3s, transform 0.1s;
+                margin-top: 10px;
+            }
+            
+            .btn-submit:hover {
+                background: #45a049;
+            }
+            
+            .btn-submit:active {
+                transform: scale(0.98);
+            }
+            
+            .btn-back {
+                display: inline-block;
+                margin-top: 20px;
+                color: #666;
+                text-decoration: none;
+                transition: color 0.3s;
+                padding: 5px 0;
+            }
+            
+            .btn-back:hover {
+                color: #333;
+            }
+            
+            .success-message {
+                color: #28a745;
+                background: #d4edda;
+                padding: 10px;
+                border-radius: 4px;
+                margin-top: 15px;
+                text-align: center;
+                border: 1px solid #c3e6cb;
+            }
+            
+            .text-muted {
+                color: #6c757d;
+                font-size: 12px;
+                display: block;
+                margin-top: 3px;
+            }
+            
+            @media (max-width: 600px) {
+                body {
+                    margin: 20px auto;
+                    padding: 10px;
+                }
+                
+                .form-container {
+                    padding: 20px;
+                }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="form-container">
+            <h1>Добавить новое средство измерения</h1>
+            
+            <!-- Форма для добавления -->
+            <form th:action="@{/user/add}" th:object="${device}" method="post">
+                
+                <!-- Поле: Название СИ -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('nameOfDevice')} ? 'has-error' : ''">
+                    <label for="nameOfDevice">Название СИ:</label>
+                    <input type="text" 
+                           id="nameOfDevice" 
+                           th:field="*{nameOfDevice}" 
+                           required="required"
+                           placeholder="Введите название средства измерения"
+                           th:classappend="${#fields.hasErrors('nameOfDevice')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('nameOfDevice')}" 
+                          th:errors="*{nameOfDevice}" 
+                          class="error-message"></span>
+                    <small class="text-muted">Поле обязательно для заполнения</small>
+                </div>
+                
+                <!-- Поле: Серийный номер -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('serialNum')} ? 'has-error' : ''">
+                    <label for="serialNum">Серийный номер:</label>
+                    <input type="text" 
+                           id="serialNum" 
+                           th:field="*{serialNum}" 
+                           placeholder="Введите серийный номер"
+                           th:classappend="${#fields.hasErrors('serialNum')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('serialNum')}" 
+                          th:errors="*{serialNum}" 
+                          class="error-message"></span>
+                </div>
+                
+                <!-- Поле: Тип средства измерения -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('typeOfDevice')} ? 'has-error' : ''">
+                    <label for="typeOfDevice">Тип средства измерения:</label>
+                    <input type="text" 
+                           id="typeOfDevice" 
+                           th:field="*{typeOfDevice}" 
+                           required="required"
+                           placeholder="Введите тип средства измерения"
+                           th:classappend="${#fields.hasErrors('typeOfDevice')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('typeOfDevice')}" 
+                          th:errors="*{typeOfDevice}" 
+                          class="error-message"></span>
+                    <small class="text-muted">Поле обязательно для заполнения</small>
+                </div>
+                
+                <!-- Поле: Регистрационный номер -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('registrNum')} ? 'has-error' : ''">
+                    <label for="registrNum">Регистрационный номер:</label>
+                    <input type="text" 
+                           id="registrNum" 
+                           th:field="*{registrNum}" 
+                           placeholder="Введите регистрационный номер"
+                           th:classappend="${#fields.hasErrors('registrNum')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('registrNum')}" 
+                          th:errors="*{registrNum}" 
+                          class="error-message"></span>
+                </div>
+                
+                <!-- Поле: Диапазон измерений -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('measurRange')} ? 'has-error' : ''">
+                    <label for="measurRange">Диапазон измерений:</label>
+                    <input type="text" 
+                           id="measurRange" 
+                           th:field="*{measurRange}" 
+                           placeholder="Введите диапазон измерений"
+                           th:classappend="${#fields.hasErrors('measurRange')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('measurRange')}" 
+                          th:errors="*{measurRange}" 
+                          class="error-message"></span>
+                </div>  
+                
+                <!-- Поле: Точность измерений -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('accuracy')} ? 'has-error' : ''">
+                    <label for="accuracy">Точность измерений:</label>
+                    <input type="text" 
+                           id="accuracy" 
+                           th:field="*{accuracy}" 
+                           placeholder="Введите точность измерений"
+                           th:classappend="${#fields.hasErrors('accuracy')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('accuracy')}" 
+                          th:errors="*{accuracy}" 
+                          class="error-message"></span>
+                </div>  
+                
+                <!-- Поле: Дата поверки - ОБЯЗАТЕЛЬНОЕ -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('calibrDate')} ? 'has-error' : ''">
+                    <label for="calibrDate">
+                        Дата поверки/калибровки:
+                        <span style="color: red;">*</span>
+                    </label>
+                    <input type="date" 
+                           id="calibrDate" 
+                           th:field="*{calibrDate}"
+                           required="required"
+                           th:classappend="${#fields.hasErrors('calibrDate')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('calibrDate')}" 
+                          th:errors="*{calibrDate}" 
+                          class="error-message"></span>
+                    <small class="text-muted">Поле обязательно для заполнения</small>
+                </div> 
+                
+                <!-- Поле: Поверочный интервал -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('calibrInterval')} ? 'has-error' : ''">
+                    <label for="calibrInterval">
+                        Поверочный интервал (месяцев):
+                        <span style="color: red;">*</span>
+                    </label>
+                    <input type="number" 
+                           id="calibrInterval" 
+                           th:field="*{calibrInterval}" 
+                           min="1"
+                           step="1"
+                           required="required"
+                           placeholder="Введите количество месяцев"
+                           th:classappend="${#fields.hasErrors('calibrInterval')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('calibrInterval')}" 
+                          th:errors="*{calibrInterval}" 
+                          class="error-message"></span>
+                    <small class="text-muted">Поле обязательно для заполнения. Минимальное значение - 1 месяц</small>
+                </div>
+                
+                <!-- Поле: Место установки -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('place')} ? 'has-error' : ''">
+                    <label for="place">Место установки:</label>
+                    <input type="text" 
+                           id="place" 
+                           th:field="*{place}" 
+                           required="required"
+                           placeholder="Введите место установки"
+                           th:classappend="${#fields.hasErrors('place')} ? 'is-invalid' : ''"/>
+                    <span th:if="${#fields.hasErrors('place')}" 
+                          th:errors="*{place}" 
+                          class="error-message"></span>
+                    <small class="text-muted">Поле обязательно для заполнения</small>
+                </div>  
+                
+                <!-- Поле: Статус прибора (выпадающий список) -->
+                <div class="form-group" th:classappend="${#fields.hasErrors('status')} ? 'has-error' : ''">
+                    <label for="status">Статус прибора:</label>
+                    <select id="status" 
+                            th:field="*{status}"
+                            th:classappend="${#fields.hasErrors('status')} ? 'is-invalid' : ''">
+                        <option value="">Выберите статус</option>
+                        <option value="в эксплуатации">в эксплуатации</option>
+                        <option value="в поверке">в поверке</option>
+                        <option value="в ремонте">в ремонте</option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('status')}" 
+                          th:errors="*{status}" 
+                          class="error-message"></span>
+                </div> 
+                
+                <!-- Кнопка отправки -->
+                <button type="submit" class="btn-submit">➕ Добавить средство измерения</button>
+            </form>
+            
+            <!-- Ссылка назад -->
+            <a href="/user/start" class="btn-back">← Назад к стартовой странице</a>
+        </div>    
+    </body>
+</html>
